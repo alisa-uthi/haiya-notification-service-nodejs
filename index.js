@@ -17,7 +17,8 @@ app.use(express.json())
 app.use(cors())
 
 // Routes
-app.use(require('./routes/notification_route'))
+app.use('/', require('./routes/notification_route'))
+app.use('/subscription', require('./routes/subscription_route'))
 
 
 const PORT = process.env.PORT || 8005

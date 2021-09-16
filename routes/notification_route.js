@@ -73,7 +73,7 @@ router.post('/user/:userId', async (req, res) => {
         const userId = req.params.userId
 
         if(Object.values(NotificationType).toString().includes(notificationType)) {
-            const result = await notificationService.insertNotificationByUserId(userId, title, body)
+            const result = await notificationService.insertNotificationByUserId(userId, title, body, notificationType)
             return res.status(201).json({ data: result })
         }
 

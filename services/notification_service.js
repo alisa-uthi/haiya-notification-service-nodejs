@@ -44,7 +44,8 @@ export const insertNotificationByUserId = async (userId, title, body, notificati
 }
 
 export const getNotificationsByUserId = async (userId) => {
-    let query = 'SELECT * FROM Notification WHERE Noti_Psn_ID = ? ;'
+    let query = 'SELECT * FROM Notification WHERE Noti_Psn_ID = ? '
+    query += 'ORDER BY Noti_Timestamp DESC;'
 
     try {
         const result = await connection.promise().execute(query, [ userId ])

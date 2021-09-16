@@ -29,17 +29,4 @@ router.patch('/:userId', async (req, res) => {
     }
 })
 
-// Check if the device has already register (Store in the database)
-router.post('/:userId/registration', async (req, res) => {
-    try {
-        const { registrationToken } = req.body
-        const userId = req.params.userId
-
-        const result = await subscriptionService.findExistingSubscription(registrationToken, userId)
-        return res.status(200).json({ data: result })
-    } catch (error) {
-        return res.status(500).json({ error: error.message })
-    }
-})
-
 module.exports = router

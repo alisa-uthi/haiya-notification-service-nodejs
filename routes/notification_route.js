@@ -2,13 +2,50 @@ const express = require('express')
 const router = express.Router()
 
 const notificationService = require('../services/notification_service')
+const subscriptionService = require('../services/subscription_service')
+const { NotificationType } = require('../constants/notification_type')
 
 // Send notification
 router.post('/', async (req, res) => {
     try {
-        const { registrationToken, title, body } = req.body
-        const result = await notificationService.sendNotification(registrationToken, title, body)
-        return res.status(200).json({ data: result })
+        const { registrationToken, title, body, userId } = req.body
+        const notificationType = req.body.notificationType.toUpperCase()
+
+        if(Object.values(NotificationType).toString().includes(notificationType)) {
+            // Find existing subscription of this device
+            const result = await subscriptionService.findExistingSubscription(registrationToken, userId)
+
+            // For calling first time, auto subscribe to both notifications 
+            if(result.length == 0) {
+                console.log("First time?")
+                await subscriptionService.insertSubscription(
+                    registrationToken, 
+                    NotificationType.ORDER_ARRIVED, 
+                    userId
+                )
+                await subscriptionService.insertSubscription(
+                    registrationToken, 
+                    NotificationType.PRODUCT_EXPIRE, 
+                    userId
+                )
+            }
+
+            // Check if the device is subscribed to this type of notification
+            const subscribeResult = await subscriptionService.checkSubscribe(
+                registrationToken, 
+                userId, 
+                notificationType
+            )
+            
+            if(subscribeResult.Scp_Subscribe == 'T') {
+                const notiResult = await notificationService.sendNotification(registrationToken, title, body)
+                return res.status(200).json({ data: notiResult })
+            } else {
+                return res.status(200).json({ data: "The device is not subscribe to this notification." })
+            }
+        }
+        
+        return res.status(400).json({ data: "Invalid notificaiton type." })
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -38,10 +75,15 @@ router.delete('/:id', async (req, res) => {
 router.post('/user/:userId', async (req, res) => {
     try {
         const { title, body } = req.body
+        const notificationType = req.body.notificationType.toUpperCase()
         const userId = req.params.userId
 
-        const result = await notificationService.insertNotificationByUserId(userId, title, body)
-        return res.status(201).json({ data: result })
+        if(Object.values(NotificationType).toString().includes(notificationType)) {
+            const result = await notificationService.insertNotificationByUserId(userId, title, body)
+            return res.status(201).json({ data: result })
+        }
+
+        return res.status(400).json({ data: "Invalid notificaiton type." })
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }

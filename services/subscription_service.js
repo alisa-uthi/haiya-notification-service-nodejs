@@ -1,8 +1,6 @@
 const connection = require('../config/database')
 
 export const insertSubscription = async (registrationToken, notiType, userId) => {
-    // For calling first time, auto subscribe to both notifications 
-
     let query = 'INSERT INTO Subscription (Scp_Registration_Token, Scp_Notification_Type, Scp_Psn_ID) '
     query += 'VALUES (?, ?, ?);'
 
@@ -42,8 +40,23 @@ export const findExistingSubscription = async (registrationToken, userId) => {
             query, 
             [ registrationToken, userId ]
         )
-        return result[0][0]
+        return result[0]
     } catch (error) {
         throw new Error(`Find Exisitng Subscriptions: ${error.message}`)
+    }
+}
+
+export const checkSubscribe = async (registrationToken, userId, notificationType) => {
+    let query = 'SELECT Scp_Subscribe FROM Subscription '
+    query += 'WHERE Scp_Registration_Token = ? AND Scp_Psn_ID = ? AND Scp_Notification_Type = ? ;'
+
+    try {
+        const result = await connection.promise().execute(
+            query, 
+            [ registrationToken, userId, notificationType ]
+        )
+        return result[0][0]
+    } catch (error) {
+        throw new Error(`Check If Device Subscribe To a Notification: ${error.message}`)
     }
 }

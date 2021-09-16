@@ -28,14 +28,14 @@ export const sendNotification = async (registrationToken, title, body) => {
     }
 }
 
-export const insertNotificationByUserId = async (userId, title, body) => {
-    let query = 'INSERT INTO Notification (Noti_Title, Noti_Body, Noti_Psn_ID) '
-    query += 'VALUES (?, ?, ?);'
+export const insertNotificationByUserId = async (userId, title, body, notificationType) => {
+    let query = 'INSERT INTO Notification (Noti_Title, Noti_Body, Noti_Type, Noti_Psn_ID) '
+    query += 'VALUES (?, ?, ?, ?);'
 
     try {
         const result = await connection.promise().execute(
             query,
-            [ title, body, userId ]
+            [ title, body, notificationType, userId ]
         )
         return result[0].insertId
     } catch (error) {

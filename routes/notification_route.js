@@ -17,15 +17,9 @@ router.post('/', async (req, res) => {
 
             // For calling first time, auto subscribe to both notifications 
             if(result.length == 0) {
-                console.log("First time?")
                 await subscriptionService.insertSubscription(
                     registrationToken, 
                     NotificationType.ORDER_ARRIVED, 
-                    userId
-                )
-                await subscriptionService.insertSubscription(
-                    registrationToken, 
-                    NotificationType.PRODUCT_EXPIRE, 
                     userId
                 )
             }

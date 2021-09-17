@@ -15,6 +15,33 @@ export const insertSubscription = async (registrationToken, notiType, userId) =>
     }
 }
 
+export const getSubscriptionByRegistrationToken = async (registrationToken) => {
+    let query = 'SELECT * FROM Subscription '
+    query += 'WHERE Scp_Registration_Token = ? ;'
+
+    try {
+        const result = await connection.promise().execute(
+            query, 
+            [ registrationToken ]
+        )
+        return result[0][0]
+    } catch (error) {
+        throw new Error(`Get Subscriptions By Registration Token: ${error.message}`)
+    }
+}
+
+export const getSubscriptionByUserId = async (userId) => {
+    let query = 'SELECT * FROM Subscription '
+    query += 'WHERE Scp_Psn_ID = ? ;'
+
+    try {
+        const result = await connection.promise().execute(query, [ userId ])
+        return result[0][0]
+    } catch (error) {
+        throw new Error(`Get Subscriptions By User Id: ${error.message}`)
+    }
+}
+
 export const updateSubscribeStatus = async (registrationToken, notiType, subscribe, userId) => {
     let query = 'UPDATE Subscription SET Scp_Subscribe = ? '
     query += 'WHERE Scp_Registration_Token = ? AND Scp_Notification_Type = ? AND Scp_Psn_ID = ? ;'

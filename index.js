@@ -1,6 +1,8 @@
 const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
+const passport = require('passport')
+require('./config/passport')
 const connection = require('./config/database')
 const app = express()
 
@@ -18,7 +20,7 @@ app.use(cors())
 
 // Routes
 app.use('/', require('./routes/notification_route'))
-app.use('/subscription', require('./routes/subscription_route'))
+app.use('/subscription', passport.authenticate('jwt', {session: false}), require('./routes/subscription_route'))
 
 
 const PORT = process.env.PORT || 8005

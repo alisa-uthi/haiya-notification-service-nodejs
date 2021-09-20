@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const passport = require('passport')
 
 const notificationService = require('../services/notification_service')
 const subscriptionService = require('../services/subscription_service')
@@ -46,7 +47,7 @@ router.post('/', async (req, res) => {
 })
 
 // Get notifications by id
-router.get('/:id', async (req, res) => {
+router.get('/:id', passport.authenticate('jwt', {session: false}), async (req, res) => {
     try {
         const result = await notificationService.getNotificationById(req.params.id)
         return res.status(200).json({ data: result })
@@ -56,7 +57,7 @@ router.get('/:id', async (req, res) => {
 })
 
 // Delete notifications by id
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', passport.authenticate('jwt', {session: false}), async (req, res) => {
     try {
         await notificationService.deleteNotificationById(req.params.id)
         return res.status(200).json({ data: "Remove notification successfully." })
@@ -84,7 +85,7 @@ router.post('/user/:userId', async (req, res) => {
 })
 
 // Get all notifications by user id
-router.get('/user/:userId', async (req, res) => {
+router.get('/user/:userId', passport.authenticate('jwt', {session: false}), async (req, res) => {
     try {
         const result = await notificationService.getNotificationsByUserId(req.params.userId)
         return res.status(200).json({ data: result })
@@ -94,7 +95,7 @@ router.get('/user/:userId', async (req, res) => {
 })
 
 // Delete all notifications by user id
-router.delete('/user/:userId', async (req, res) => {
+router.delete('/user/:userId', passport.authenticate('jwt', {session: false}), async (req, res) => {
     try {
         await notificationService.deleteNotificationsByUserId(req.params.userId)
         return res.status(200).json({ data: "Clear All Notifications." })

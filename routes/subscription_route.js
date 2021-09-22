@@ -8,7 +8,7 @@ router.post('/token', async (req, res) => {
     try {
         const registrationToken = req.body.registrationToken
         const result = await subscriptionService.getSubscriptionByRegistrationToken(registrationToken)
-        return res.status(201).json({ data: result })
+        return res.status(200).json({ data: result })
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }

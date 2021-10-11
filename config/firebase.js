@@ -6,7 +6,4 @@ const FirebaseApp = admin.initializeApp({
   storageBucket: "gs://haiya-273b3.appspot.com"
 });
 
-// const storage = FirebaseApp.storage();
-// const bucket = storage.bucket();
-
 module.exports.admin = FirebaseApp

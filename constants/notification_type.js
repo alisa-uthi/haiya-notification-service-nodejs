@@ -1,3 +1,5 @@
 export const NotificationType = Object.freeze({
-    ORDER_ARRIVED: "ORDER_ARRIVED",
-})
+  ORDER_ARRIVED: "ORDER_ARRIVED",
+  ORDER_OTW_PHARMACY: "ORDER_OTW_PHARMACY",
+  ORDER_PICKEDUP: "ORDER_PICKEDUP",
+});

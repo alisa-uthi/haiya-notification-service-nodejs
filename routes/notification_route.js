@@ -34,6 +34,8 @@ router.post('/', async (req, res) => {
             
             if(subscribeResult.Scp_Subscribe == 'T') {
                 const notiResult = await notificationService.sendNotification(registrationToken, title, body)
+                await notificationService.insertNotificationByUserId(userId, title, body, notificationType)
+
                 return res.status(200).json({ data: notiResult })
             } else {
                 return res.status(200).json({ data: "The device is not subscribe to this notification." })

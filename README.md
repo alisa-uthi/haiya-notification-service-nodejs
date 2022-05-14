@@ -1,2 +1,2 @@
 # haiya-notification-service-nodejs
-Notification service of HAIYA project by using Node JS connects with MySQL database
+A microservice to manage the notification of the system
